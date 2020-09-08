@@ -1,3 +1,5 @@
+require 'pry'
+
 def find_item_by_name_in_collection(name, collection)
   collection.each do |index|
     if name == index[:item]
@@ -8,15 +10,17 @@ def find_item_by_name_in_collection(name, collection)
 end
 
 def consolidate_cart(cart)
-  count = 1
   cart_combined = []
   cart.each do |item_info|
     item_info[:count] = 1
-    if !cart_combined.include? item_info
+    food_name = find_item_by_name_in_collection(item_info[:item], cart_combined)
+    if !food_name 
       cart_combined.push(item_info)
     else
       for i in cart_combined
-        i[:count] += 1
+        if i[:item] == item_info[:item]
+          i[:count] += 1
+        end
       end
     end
   end
@@ -33,10 +37,32 @@ grocery_shelf = [
 
 unconsolidated_cart = [
   {:item => "AVOCADO", :price => 3.00, :clearance => true },
+  {:item => "KALE", :price => 3.00, :clearance => false},
   {:item => "AVOCADO", :price => 3.00, :clearance => true },
   {:item => "AVOCADO", :price => 3.00, :clearance => true },
+  {:item => "KALE", :price => 3.00, :clearance => false},
+  {:item => "AVOCADO", :price => 3.00, :clearance => true },
+  {:item => "KALE", :price => 3.00, :clearance => false}, 
   {:item => "KALE", :price => 3.00, :clearance => false}
     ]
   
-#find_item_by_name_in_collection("CHOLULA", grocery_shelf)
-puts consolidate_cart(unconsolidated_cart)
+puts find_item_by_name_in_collection("CHOLULA", grocery_shelf)
+#puts consolidate_cart(unconsolidated_cart)
+
+
+
+"def consolidate_cart(cart)
+  count = 1
+  cart_combined = []
+  cart.each do |item_info|
+    item_info[:count] = 1
+    if !cart_combined.include? item_info
+      cart_combined.push(item_info)
+    else
+      for i in cart_combined
+        i[:count] += 1
+      end
+    end
+  end
+  return cart_combined
+end"
